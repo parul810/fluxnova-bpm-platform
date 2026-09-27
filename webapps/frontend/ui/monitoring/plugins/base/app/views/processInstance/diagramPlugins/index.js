@@ -22,6 +22,7 @@ var fxnCommon = require('ui/common/scripts/module/index');
 
 var instanceCount = require('./instanceCount');
 var callActivity = require('./callActivity');
+var agentExecutionStatus = require('./agentExecutionStatus');
 
 var ngModule = angular.module(
   'monitoring.plugin.base.views.instance.diagram-plugins',
@@ -30,5 +31,6 @@ var ngModule = angular.module(
 
 ngModule.config(instanceCount);
 ngModule.config(callActivity);
+ngModule.config(agentExecutionStatus);
 
 module.exports = ngModule;
