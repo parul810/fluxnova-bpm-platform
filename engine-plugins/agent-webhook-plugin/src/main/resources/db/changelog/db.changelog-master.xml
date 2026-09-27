@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+  <changeSet id="1-create-agent-execution" author="agent-webhook-plugin">
+    <createTable tableName="FLUXNOVA_AGENT_EXECUTION">
+      <column name="EXECUTION_ID" type="varchar(64)">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="PROCESS_INSTANCE_ID" type="varchar(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ACTIVITY_INSTANCE_ID" type="varchar(64)"/>
+      <column name="EXTERNAL_TASK_ID" type="varchar(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="AGENT_REF" type="varchar(255)"/>
+      <column name="SESSION_ID" type="varchar(255)"/>
+      <column name="STATE_" type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="LAST_EVENT_ID" type="varchar(64)"/>
+      <column name="LAST_SEQ" type="int"/>
+      <column name="BUSINESS_OUTCOME" type="varchar(32)"/>
+      <column name="RESULT_JSON" type="clob"/>
+      <column name="ERROR_JSON" type="clob"/>
+      <column name="WAIT_JSON" type="clob"/>
+      <column name="SEQUENCE_GAP" type="boolean" defaultValueBoolean="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="CREATED_AT" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="UPDATED_AT" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createIndex indexName="IDX_AGENT_EXEC_PROC_INST" tableName="FLUXNOVA_AGENT_EXECUTION">
+      <column name="PROCESS_INSTANCE_ID"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet id="2-create-agent-event" author="agent-webhook-plugin">
+    <createTable tableName="FLUXNOVA_AGENT_EVENT">
+      <column name="EVENT_ID" type="varchar(64)">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="EXECUTION_ID" type="varchar(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="SEQ" type="int"/>
+      <column name="TYPE_" type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="RECEIVED_AT" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="RAW_PAYLOAD" type="clob"/>
+    </createTable>
+
+    <createIndex indexName="IDX_AGENT_EVENT_EXECUTION" tableName="FLUXNOVA_AGENT_EVENT">
+      <column name="EXECUTION_ID"/>
+    </createIndex>
+
+    <addForeignKeyConstraint
+        baseTableName="FLUXNOVA_AGENT_EVENT" baseColumnNames="EXECUTION_ID"
+        constraintName="FK_AGENT_EVENT_EXECUTION"
+        referencedTableName="FLUXNOVA_AGENT_EXECUTION" referencedColumnNames="EXECUTION_ID"/>
+  </changeSet>
+
+  <changeSet id="3-add-agent-execution-activity-id" author="agent-webhook-plugin">
+    <addColumn tableName="FLUXNOVA_AGENT_EXECUTION">
+      <column name="ACTIVITY_ID" type="varchar(255)"/>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>
